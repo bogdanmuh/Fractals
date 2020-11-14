@@ -45,26 +45,52 @@ class MainWindow : JFrame(){
             -2.0, 1.0, -1.0, 1.0
         )
 
+        val mfp = MouseFramePainter(mainPanel.graphics)
+        val fp = FractalPainter(plane)
+        val fractal = Mandelbrot()
+
         mainPanel.addComponentListener(object : ComponentAdapter() {
             override fun componentResized(e: ComponentEvent?) {
                 plane.realWidth = mainPanel.width
                 plane.realHeight = mainPanel.height
+                repaint()
+                mfp.repaint(mainPanel.graphics)
             }
         })
 
-        val mfp = MouseFramePainter(mainPanel.graphics)
+
 
         mainPanel.addMouseListener(object: MouseAdapter(){
             override fun mousePressed(e: MouseEvent?) {
                 e?.let {
                     mfp.isVisible = true
                     mfp.startPoint = it.point
+
                 }
             }
             override fun mouseReleased(e: MouseEvent?) {
                 mfp.isVisible = false
                 e?.let{
                     mfp.currentPoint = it.point
+
+                    val newPlane=CartesianScreenPlane(
+                            mainPanel.width,
+                            mainPanel.height,
+                            Converter.xScr2Crt(Math.min((mfp.currentPoint?.x)?:return,(mfp.startPoint?.x)?:return),plane),
+                            Converter.xScr2Crt(Math.max((mfp.currentPoint?.x)?:return,(mfp.startPoint?.x)?:return),plane),
+                            Converter.yScr2Crt(Math.max((mfp.currentPoint?.y)?:return,(mfp.startPoint?.y)?:return),plane),
+                            Converter.yScr2Crt(Math.min((mfp.currentPoint?.y)?:return,(mfp.startPoint?.y)?:return),plane)
+                    )
+                    //Изменение разметки
+                    plane.xMin=newPlane.xMin
+                    plane.xMax=newPlane.xMax
+                    plane.yMin=newPlane.yMin
+                    plane.yMax=newPlane.yMax
+
+                    //mainPanel.paint(mainPanel.graphics)
+                    repaint()
+                    mfp.startPoint=null
+                    mfp.currentPoint=null
                 }
             }
         })
@@ -77,8 +103,7 @@ class MainWindow : JFrame(){
             }
         })
 
-        val fp = FractalPainter(plane)
-        val fractal = Mandelbrot()
+
         fp.fractalTest = fractal::isInSet
         fp.getColor = ::colorScheme4
 

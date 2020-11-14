@@ -24,14 +24,26 @@ class MouseFramePainter(var g: Graphics){
 
     private fun paint(){
         if (isVisible){
+            //let   блокирует потоки и и проверяет не равны ли s c null
             startPoint?.let{s ->
                 currentPoint?.let {c ->
                     g.setXORMode(Color.WHITE)
                     g.color = Color.BLACK
-                    g.drawRect(s.x, s.y, c.x-s.x, c.y-s.y)
+                    if (s.x < c.x && s.y < c.y ) g.drawRect(s.x, s.y, c.x-s.x, c.y-s.y) //4 четверть
+                    else if (s.x < c.x && s.y> c.y ) g.drawRect(s.x,c.y ,c.x-s.x, s.y-c.y) //1
+                    else if (s.x > c.x && s.y> c.y ) g.drawRect(c.x, c.y, s.x-c.x, s.y-c.y) //2
+                    else  g.drawRect(c.x, s.y, s.x-c.x, c.y-s.y)// 3
                     g.setPaintMode()
                 }
             }
+
         }
     }
+
+    fun repaint(graphics: Graphics) {
+        this.g =graphics
+
+    }
+
+
 }

@@ -7,7 +7,7 @@ import kotlin.math.max
 /**
  * Класс множества Мандельброта
  */
-class Mandelbrot {
+class  Mandelbrot {
 
     /**
      * r^2 для проверки принадлежности точки множеству

@@ -7,19 +7,31 @@ import javax.swing.JPanel
 class GraphicsPanel : JPanel(){
     private val painters: MutableList<Painter> = mutableListOf()
 
+    //Переопределенный метод отрисовки панелей
     override fun paint(g: Graphics?) {
+        //Отрисовывается пэинт "родителя"
         super.paint(g)
-        painters.forEach { it.paint(g) }
+        //Отрисовывается пэинт каждого пэинтера
+        painters.forEach{
+            it.paint(g)
+        }
+    }
+    /**
+     * Метод для добавления пэинтеров
+     * @param painter - пэинтер который нужно добавить
+     */
+    fun addPainter(painter: Painter){
+        painters.add(painter)
+        repaint()
     }
 
-    fun addPainter(p: Painter){
-        if (!painters.contains(p))
-            painters.add(p)
-    }
-
-    fun removePainter(p: Painter) {
-        if (painters.contains(p))
-            painters.remove(p)
+    /**
+     * Метод для удаления пэинтеров
+     * @param painter - пэинтер который нужно удалить
+     */
+    fun removePainter(painter: Painter){
+        painters.remove(painter)
+        repaint()
     }
 
 }
